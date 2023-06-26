@@ -1,0 +1,122 @@
+version: "3.7"
+services:
+    dashboard-forum-svc:
+        init: false
+        image: us.icr.io/sbsd-prod/sbsd-dashboard-forum-services:prd
+        networks:
+            - frontend
+        environment:
+            - SBSD_ENV=prd
+            - JAVA_HOST_ENDPOINT=https://dashboard-service.sbsd.virginia.gov/
+            - USE_DOCKER_SECRETS=true
+            - PORT=6001
+            - APP_LOGGER_LEVEL=debug
+            - ENABLESSL=false
+            - DB=DASHDEV
+            - DB_HOSTNAME=10.192.101.11
+            - DB_USERNAME=certappuser
+            - DB_PASSWORD
+            - DB_PORT=50000
+            - DB_SCHEMA=DASHBOARD
+            - DB_POOL_SIZE=250
+            - DB_CONNECTION_TIMEOUT=120
+            - IBM_DB_DEBUG_LOGS=false
+            - JWT_TOKEN_SECRET_KEY
+            - JWT_TOKEN_SECRET_KEY_FOR_UPLOAD
+            - NEWRELIC_ENV=PRD
+            - PASSWORD_SALT_ROUNDS=10
+            - SENDGRID_API_KEY
+            - JAVA_HOST_ENDPOINT=https://directory.sbsd.virginia.gov/certapp/uploadDocument
+            - USE_JAVA_FILE_UPLOAD=true
+            - JAVA_HOST_ENDPOINT_FOR_DOWNLOAD=https://directory.sbsd.virginia.gov
+            - USE_JAVA_FILE_DOWNLOAD=true
+            - JAVA_HOST_ENDPOINT_FOR_UPDATE=https://directory.sbsd.virginia.gov/certapp/updateAddress
+            - USE_JAVA_FOR_INSERT_AND_UPDATE=false
+            - FIVE_YEAR_FEATURE_FLAG=true
+            - HIDE_PREVIOUS_CERTIFICATION_FEATURE_FLAG=true
+            - MALLOC_ARENA_MAX=2
+            - boTimeout=20
+            - boRefreshTimeout=15
+            - coTimeout=480
+            - coRefreshTimeout=475
+            - adminTimeout=480
+            - adminRefreshTimeout=475
+            - GOOGLE_ANALYTICS_TRACKING_ID
+            - GOOGLE_MAP_API_KEY
+            - GOOGLE_MAP_API_SERVER_KEY
+            - MEM_WATCH_LEAK=false
+            - MEM_WATCH_STATS=false
+            - MEM_WATCH_LOGS=false
+            - NODE_OPTIONS=2048
+            - REDIS_HOST=redis-server
+            - REDIS_CACHE_TTL_SEC=900
+            - DB_INITIAL_POOL_SIZE=25
+            - BOX_CLIENT_ID
+            - BOX_CLIENT_SECRET
+            - BOX_PUBLIC_KEY_ID
+            - BOX_PRIVATE_KEY
+            - BOX_PASSPHRASE
+            - BOX_ENTERPRISE_ID
+        # secrets:
+        #     - dev_svc_auth0_client_id
+        #     - dev_svc_auth0_client_secret
+        #     - dev_svc_auth0_client_grant
+        #     - dev_svc_auth0_mgmt_api_id
+        #     - dev_svc_auth0_mgmt_api_grant
+        deploy:
+            resources:
+                limits:
+                    memory: 1800M
+            replicas: 3
+            restart_policy:
+                condition: on-failure
+            update_config:
+                parallelism: 1
+                delay: 10s
+                order: stop-first
+        logging:
+            driver: syslog
+            options:
+                syslog-address: "tcp+tls://logs6.papertrailapp.com:39872"
+                tag: "{{.Name}}"
+
+networks:
+    frontend:
+
+secrets:
+  prd_db_password:
+    external: true
+  prd_jwt_token_secret_key:
+    external: true
+  prd_cert_app_sendgrid_api_key:
+    external: true
+  prd_cert_app_googleanalytics_tracking_id:
+    external: true
+  prd_cert_app_maps_api_key:
+    external: true
+  prd_cert_app_maps_api_server_key:
+    external: true
+  prd_jwt_token_secret_key_for_upload:
+    external: true
+  prd_box_client_id:
+    external: true
+  prd_box_client_secret:
+    external: true
+  prd_box_public_key_id:
+    external: true
+  prd_box_private_key:
+    external: true
+  prd_box_passphrase:
+    external: true
+  prd_box_enterprise_id:
+    external: true
+  newrelic_license_id:
+    external: true
+  slack_webhook_url_secret:
+    external: true
+  cert_app_cert:
+    external: true
+  cert_app_csr:
+    external: true
+  cert_app_key:
+    external: true

@@ -1,0 +1,118 @@
+version: "3.7"
+services:
+    dashboard-forum-svc:
+        init: false
+        image: us.icr.io/sbsd-lower/sbsd-dashboard-forum-services:dev
+        networks:
+            - frontend
+        environment:
+            - SBSD_ENV=dev
+            - JAVA_HOST_ENDPOINT=https://sbsd-dashboard-service-dev.sbsd-va.net/
+            - USE_DOCKER_SECRETS=true
+            - PORT=6001
+            - APP_LOGGER_LEVEL=debug
+            - ENABLESSL="false"
+            - DB=FORUMDEV
+            - DB_HOSTNAME=10.184.246.113
+            - DB_USERNAME=forumuser
+            - DB_PASSWORD
+            - DB_PORT=50000
+            - DB_SCHEMA=DASHFORUM
+            - DB_POOL_SIZE=250
+            - DB_CONNECTION_TIMEOUT=50
+            - IBM_DB_DEBUG_LOGS=true
+            - JWT_TOKEN_SECRET_KEY
+            - JWT_TOKEN_SECRET_KEY_FOR_UPLOAD
+            - NEWRELIC_ENV=DEV
+            - PASSWORD_SALT_ROUNDS=10
+            - SENDGRID_API_KEY
+            - FIVE_YEAR_FEATURE_FLAG=true
+            - HIDE_PREVIOUS_CERTIFICATION_FEATURE_FLAG=true
+            - MALLOC_ARENA_MAX=2
+            - boTimeout=20
+            - boRefreshTimeout=15
+            - coTimeout=480
+            - coRefreshTimeout=475
+            - adminTimeout=480
+            - adminRefreshTimeout=475
+            - GOOGLE_ANALYTICS_TRACKING_ID
+            - GOOGLE_MAP_API_KEY
+            - GOOGLE_MAP_API_SERVER_KEY
+            - MEM_WATCH_LEAK=false
+            - MEM_WATCH_STATS=false
+            - MEM_WATCH_LOGS=false
+            - NODE_OPTIONS=512
+            - REDIS_HOST=redis-server
+            - REDIS_CACHE_TTL_SEC=900
+            - DB_INITIAL_POOL_SIZE=25
+            - BOX_CLIENT_ID
+            - BOX_CLIENT_SECRET
+            - BOX_PUBLIC_KEY_ID
+            - BOX_PRIVATE_KEY
+            - BOX_PASSPHRASE
+            - BOX_ENTERPRISE_ID
+        secrets:
+            - dev_dash_forum_db_password
+            - dev_jwt_token_secret_key
+            - dev_jwt_token_secret_key_for_upload
+            - dev_cert_app_sendgrid_api_key
+            - dev_cert_app_googleanalytics_tracking_id
+            - dev_box_client_id
+            - dev_box_client_secret
+            - dev_box_public_key_id
+            - dev_box_private_key
+            - dev_box_passphrase
+            - dev_box_enterprise_id
+            - newrelic_license_id
+            - slack_webhook_url_secret
+            - cert_app_cert
+            - cert_app_csr
+            - cert_app_key
+        deploy:
+            resources:
+                limits:
+                    memory: 900M
+            replicas: 1
+            restart_policy:
+                condition: on-failure
+        logging:
+            driver: syslog
+            options:
+                syslog-address: "tcp+tls://logs6.papertrailapp.com:34571"
+                tag: "{{.Name}}"
+networks:
+    frontend:
+
+secrets:
+    dev_dash_forum_db_password:
+        external: true
+    dev_jwt_token_secret_key:
+        external: true
+    dev_jwt_token_secret_key_for_upload:
+        external: true
+    dev_cert_app_sendgrid_api_key:
+        external: true
+    dev_cert_app_googleanalytics_tracking_id:
+        external: true
+    dev_box_client_id:
+        external: true
+    dev_box_client_secret:
+        external: true
+    dev_box_public_key_id:
+        external: true
+    dev_box_private_key:
+        external: true
+    dev_box_passphrase:
+        external: true
+    dev_box_enterprise_id:
+        external: true
+    newrelic_license_id:
+        external: true   
+    slack_webhook_url_secret:
+        external: true
+    cert_app_cert:
+        external: true
+    cert_app_csr:
+        external: true
+    cert_app_key:
+        external: true

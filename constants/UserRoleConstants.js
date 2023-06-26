@@ -1,0 +1,15 @@
+export const USER_ROLE_CONSTANTS = {
+    SBSD_ADMIN: "role:sbsdadmin",
+    AGENCY_OWNER: "role:agencyowner",
+    DATA_MANAGER: "role:datamanager",
+    SWAM_PLAN_APPROVER: "role:swamplanapprover",
+    SWAM_DATA_MANGER: "role:swamdatamanger",
+    AGENCY_DATA_MANAGER: "role:agencydatamanger",
+    REPORT_VIEWER: "role:reportviewer",
+    CODA_DEVELOPER: "role:codadeveloper",
+    AGENCY_DATA_MANAGER_AND_SWAM_ADMIN: "role:agencydatamanagerandswamplanadministrator",
+    SWAM_ADMIN_AND_APPROVER: "role:swamplanadministratorandapprover",
+    AGENCY_OWNER_AND_SWAM_ADMIN: "role:agencyownerandswamplanadministrator",
+    AGENCY_OWNER_AND_SWAM: "role:agencyownerandswam",
+    SBSD_OUTREACH_ROLE: "role:sbsdoutreach",
+}
